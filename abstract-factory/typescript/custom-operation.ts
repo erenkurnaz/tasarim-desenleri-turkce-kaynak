@@ -2,20 +2,18 @@ import {Connection} from "./connection";
 import {Command} from "./command";
 import {IDatabaseFactory} from "./database-factory.interface";
 
-export class CustomOperation<T extends IDatabaseFactory> {
+export class CustomOperation {
   private connection: Connection;
   private command: Command;
 
-  constructor(private readonly databaseFactory: T) {
+  constructor(private readonly databaseFactory: IDatabaseFactory) {
     this.connection = databaseFactory.createConnection();
     this.command = databaseFactory.createCommand();
   }
 
-  public async removeById(id: number): Promise<void> {
-    await Promise.all([
-      this.connection.openConnection(),
-      this.command.executeCommand('DELETE ...'),
-      this.connection.closeConnection(),
-    ]);
+  public removeById(id: number): void {
+    this.connection.openConnection();
+    this.command.executeCommand('DELETE ...');
+    this.connection.closeConnection();
   }
 }
